@@ -59,6 +59,7 @@ export function GraphqlAPI({stack, app}: StackContext) {
         defaults: {
             function: {
                 // runtime: 'nodejs18.x',
+                timeout: 15,
                 environment: {
                     DATABASE_URL: app.local
                         ? 'mysql://root@localhost:3306/test'
