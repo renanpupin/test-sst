@@ -1,17 +1,33 @@
 import {ApolloServer} from '@apollo/server'
 import {startServerAndCreateLambdaHandler, handlers} from '@as-integrations/aws-lambda'
 import {ApiHandler} from 'sst/node/api'
+import {db} from 'src/db'
 
 //TODO: move to code first with federation support
 const typeDefs = `#graphql
 type Query {
     hello: String
+    prisma: String
 }
 `
 
 const resolvers = {
     Query: {
-        hello: () => 'world'
+        hello: () => 'world',
+        prisma: async () => {
+            // await db.user.create({
+            //     data: {
+            //         id: 1,
+            //         name: 'Test user',
+            //         email: 'test@test.com'
+            //     }
+            // })
+            const result = await db.user.findMany()
+
+            console.log('JSON.stringify(result)', JSON.stringify(result))
+
+            return `prisma ${JSON.stringify(result)}`
+        }
     }
 }
 
