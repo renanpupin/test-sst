@@ -22,6 +22,12 @@ Generates a `.build/` directory with the compiled files and a `.build/cdk.out/` 
 
 Deploy all your stacks to AWS. Or optionally deploy a specific stack.
 
+or
+
+### `npm run deploy --stage prod`
+
+Deploy into specific stage
+
 ### `npm run remove [stack]`
 
 Remove all your stacks and all of their resources from AWS. Or optionally remove a specific stack.

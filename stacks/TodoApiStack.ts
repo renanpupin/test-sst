@@ -1,4 +1,4 @@
-import {StackContext, Api, EventBus, Function, Cron} from 'sst/constructs'
+import {StackContext, Api, EventBus, Function, Cron, Topic} from 'sst/constructs'
 
 export function API({stack}: StackContext) {
     const bus = new EventBus(stack, 'bus', {
@@ -7,16 +7,23 @@ export function API({stack}: StackContext) {
         }
     })
 
+    const pingTopic = new Topic(stack, 'Ping', {
+        subscribers: {
+            ping: 'packages/functions/src/lambda.pong'
+        }
+    })
+
     const api = new Api(stack, 'api', {
         defaults: {
             function: {
-                bind: [bus]
+                bind: [bus, pingTopic]
             }
         },
         routes: {
             'GET /': 'packages/functions/src/lambda.handler',
             'GET /todo': 'packages/functions/src/todo.list',
-            'POST /todo': 'packages/functions/src/todo.create'
+            'POST /todo': 'packages/functions/src/todo.create',
+            'GET /ping': 'packages/functions/src/lambda.ping'
         }
     })
 
@@ -30,7 +37,7 @@ export function API({stack}: StackContext) {
     })
 
     new Cron(stack, 'Cron', {
-        schedule: 'rate(1 minute)',
+        schedule: 'rate(2 minutes)',
         job: 'packages/functions/src/lambda.cron'
     })
 
