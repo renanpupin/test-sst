@@ -1,9 +1,11 @@
 import AWS from 'aws-sdk'
+import {SNSEvent, SQSEvent} from 'aws-lambda'
 import {ApiHandler} from 'sst/node/api'
 import {Topic} from 'sst/node/topic'
-import {SNSEvent} from 'aws-lambda'
+import {Queue} from 'sst/node/queue'
 
 const sns = new AWS.SNS()
+const sqs = new AWS.SQS()
 
 export const handler = ApiHandler(async _evt => {
     return {
@@ -20,7 +22,7 @@ export const cron = ApiHandler(async _evt => {
     }
 })
 
-export const ping = ApiHandler(async _evt => {
+export const snsPublish = ApiHandler(async _evt => {
     await sns
         .publish({
             // Get the topic from the environment variable
@@ -30,20 +32,48 @@ export const ping = ApiHandler(async _evt => {
         })
         .promise()
 
-    console.log('sending ping to SNS!')
+    console.log('sending message to SNS!')
 
     return {
         statusCode: 200,
-        body: `Ping SNS`
+        body: `Publish SNS`
     }
 })
 
-export const pong = (event: SNSEvent) => {
+export const snsConsumer = (event: SNSEvent) => {
     const records: any[] = event.Records
-    console.log(`Pong received: "${records[0].Sns.Message}"`)
+    console.log(`SNS message received: "${records[0].Sns.Message}"`)
 
     return {
         statusCode: 200,
-        body: `Pong SNS`
+        body: `Consumer SNS`
+    }
+}
+
+export const queue = ApiHandler(async _evt => {
+    // Send a message to queue
+    await sqs
+        .sendMessage({
+            // Get the queue url from the environment variable
+            QueueUrl: Queue.TestQueue.queueUrl,
+            MessageBody: JSON.stringify({message: 'sqs works!'})
+        })
+        .promise()
+
+    console.log('Message queued!')
+
+    return {
+        statusCode: 200,
+        body: `Add to SQS`
+    }
+})
+
+export const sqsConsumer = (event: SQSEvent) => {
+    const records: any[] = event.Records
+    console.log(`Message processed: "${records[0].body}"`)
+
+    return {
+        statusCode: 200,
+        body: `Consumer SQS`
     }
 }

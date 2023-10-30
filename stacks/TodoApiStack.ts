@@ -1,4 +1,5 @@
-import {StackContext, Api, EventBus, Function, Cron, Topic} from 'sst/constructs'
+import {StackContext, Api, EventBus, Function, Cron, Topic, Queue} from 'sst/constructs'
+import {queue} from '@test-sst/functions/src/lambda'
 
 export function API({stack}: StackContext) {
     const bus = new EventBus(stack, 'bus', {
@@ -9,21 +10,26 @@ export function API({stack}: StackContext) {
 
     const pingTopic = new Topic(stack, 'Ping', {
         subscribers: {
-            ping: 'packages/functions/src/lambda.pong'
+            ping: 'packages/functions/src/lambda.snsConsumer'
         }
+    })
+
+    const queue = new Queue(stack, 'TestQueue', {
+        consumer: 'packages/functions/src/lambda.sqsConsumer'
     })
 
     const api = new Api(stack, 'api', {
         defaults: {
             function: {
-                bind: [bus, pingTopic]
+                bind: [bus, pingTopic, queue]
             }
         },
         routes: {
             'GET /': 'packages/functions/src/lambda.handler',
             'GET /todo': 'packages/functions/src/todo.list',
             'POST /todo': 'packages/functions/src/todo.create',
-            'GET /ping': 'packages/functions/src/lambda.ping'
+            'GET /sns': 'packages/functions/src/lambda.snsPublish',
+            'GET /queue': 'packages/functions/src/lambda.queue'
         }
     })
 
