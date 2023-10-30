@@ -12,8 +12,6 @@ it('test stack output', async () => {
     //@ts-ignore
     const template = Template.fromStack(getStack(GraphqlAPI))
 
-    console.log('template', template)
-
     template.hasResourceProperties('AWS::Lambda::Function', {
         Timeout: 15
     })
