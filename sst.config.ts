@@ -7,6 +7,10 @@ export default {
         return {
             name: 'test-sst',
             region: 'sa-east-1'
+            // stage: 'integration',
+            // profile: _input.stage === "production"
+            //     ? "myapp-production"
+            //     : "myapp-dev"
         }
     },
     stacks(app) {

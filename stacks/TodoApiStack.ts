@@ -43,7 +43,7 @@ export function API({stack}: StackContext) {
     })
 
     new Cron(stack, 'Cron', {
-        schedule: 'rate(2 minutes)',
+        schedule: 'rate(5 minutes)',
         job: 'packages/functions/src/lambda.cron'
     })
 
