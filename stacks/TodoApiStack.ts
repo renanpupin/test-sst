@@ -1,5 +1,4 @@
 import {StackContext, Api, EventBus, Function, Cron, Topic, Queue} from 'sst/constructs'
-import {queue} from '@test-sst/functions/src/lambda'
 
 export function API({stack}: StackContext) {
     const bus = new EventBus(stack, 'bus', {
