@@ -3,7 +3,7 @@ import {SNSEvent, SQSEvent} from 'aws-lambda'
 import {ApiHandler} from 'sst/node/api'
 import {Topic} from 'sst/node/topic'
 import {Queue} from 'sst/node/queue'
-import {getConfig} from './config'
+import {getConfig, getExampleEnv} from './config'
 
 const sns = new AWS.SNS()
 const sqs = new AWS.SQS()
@@ -13,7 +13,7 @@ export const handler = ApiHandler(async _evt => {
         statusCode: 200,
         body: `Hello world. The time is ${new Date().toISOString()} IS_LOCAL=${
             process.env.IS_LOCAL
-        } APP=${getConfig().APP} STAGE=${getConfig().STAGE}.`
+        } APP=${getConfig().APP} STAGE=${getConfig().STAGE} EXAMPLE_ENV=${getExampleEnv()}.`
     }
 })
 

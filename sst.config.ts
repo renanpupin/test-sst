@@ -14,6 +14,12 @@ export default {
         }
     },
     stacks(app) {
+        // console.log('process.env', process.env)
+
+        app.setDefaultFunctionProps({
+            environment: {EXAMPLE_ENV: process.env.EXAMPLE_ENV as string}
+        })
+
         app.stack(API).stack(GraphqlAPI)
 
         //https://docs.sst.dev/constructs/App#setdefaultremovalpolicy
