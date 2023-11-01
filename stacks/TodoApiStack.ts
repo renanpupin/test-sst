@@ -1,4 +1,4 @@
-import {StackContext, Api, EventBus, Function, Cron, Topic, Queue} from 'sst/constructs'
+import {StackContext, Api, EventBus, Function, Cron, Topic, Queue, Config} from 'sst/constructs'
 
 export function API({stack}: StackContext) {
     const bus = new EventBus(stack, 'bus', {
@@ -17,10 +17,12 @@ export function API({stack}: StackContext) {
         consumer: 'packages/functions/src/lambda.sqsConsumer'
     })
 
+    const ssmSecret = new Config.Secret(stack, 'EXAMPLE_SSM')
+
     const api = new Api(stack, 'api', {
         defaults: {
             function: {
-                bind: [bus, pingTopic, queue]
+                bind: [bus, pingTopic, queue, ssmSecret]
             }
         },
         routes: {

@@ -13,7 +13,9 @@ export const handler = ApiHandler(async _evt => {
         statusCode: 200,
         body: `Hello world. The time is ${new Date().toISOString()} IS_LOCAL=${
             process.env.IS_LOCAL
-        } APP=${getConfig().APP} STAGE=${getConfig().STAGE} EXAMPLE_ENV=${getExampleEnv()}.`
+        } APP=${getConfig().APP} STAGE=${
+            getConfig().STAGE
+        } EXAMPLE_ENV=${getExampleEnv()} EXAMPLE_SSM=${getConfig().EXAMPLE_SSM}.`
     }
 })
 

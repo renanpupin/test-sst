@@ -7,15 +7,13 @@ export default {
         return {
             name: 'test-sst',
             region: 'sa-east-1'
-            // stage: 'integration',
+            // stage: _input.stage ?? 'integration',
             // profile: _input.stage === "production"
             //     ? "myapp-production"
             //     : "myapp-dev"
         }
     },
     stacks(app) {
-        // console.log('process.env', process.env)
-
         app.setDefaultFunctionProps({
             environment: {EXAMPLE_ENV: process.env.EXAMPLE_ENV as string}
         })
