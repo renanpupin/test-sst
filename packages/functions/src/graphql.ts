@@ -1,14 +1,18 @@
 import {ApolloServer} from '@apollo/server'
+import {buildSubgraphSchema} from '@apollo/subgraph'
 import {startServerAndCreateLambdaHandler, handlers} from '@as-integrations/aws-lambda'
+import gql from 'graphql-tag'
 import {ApiHandler} from 'sst/node/api'
 import {db} from 'src/db'
 
-//TODO: move to code first with federation support
-const typeDefs = `#graphql
-type Query {
-    hello: String
-    prisma: String
-}
+const typeDefs = gql`
+    extend schema
+        @link(url: "https://specs.apollo.dev/federation/v2.0", import: ["@key", "@shareable"])
+
+    type Query {
+        hello: String
+        prisma: String
+    }
 `
 
 const resolvers = {
@@ -32,8 +36,10 @@ const resolvers = {
 }
 
 const server = new ApolloServer({
-    typeDefs,
-    resolvers
+    schema: buildSubgraphSchema({
+        typeDefs,
+        resolvers
+    })
 })
 
 export const gqlHandler = startServerAndCreateLambdaHandler(

@@ -34,11 +34,14 @@
     "packages/*"
   ],
   "dependencies": {
+    "@apollo/gateway": "^2.5.6",
     "@apollo/server": "^4.9.4",
+    "@apollo/subgraph": "^2.5.6",
     "@as-integrations/aws-lambda": "^3.1.0",
     "@prisma/client": "^5.5.2",
     "fs-extra": "^11.1.1",
     "graphql": "^16.8.1",
+    "graphql-tag": "^2.12.6",
     "prisma": "^5.5.2"
   }
 }

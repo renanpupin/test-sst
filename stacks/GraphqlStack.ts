@@ -94,4 +94,8 @@ export function GraphqlAPI({stack, app}: StackContext) {
         ApiEndpoint: api.url,
         GqlEndpoint: `${api.url}/graphql`
     })
+
+    return {
+        api
+    }
 }
